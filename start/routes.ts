@@ -40,52 +40,40 @@ router
     router.get('/:id', [StoresController, 'show']).as('stores.show')
     router.get('/:id/categories', [CategoriesController, 'index']).as('categories.index')
     router.get('/:id/addons', [AddonsController, 'index']).as('addons.index')
-    router
-      .group(() => {
-        router.post('/', [StoresController, 'store']).as('stores.store')
-        router.put('/:id', [StoresController, 'update']).as('stores.update')
-        router.delete('/:id', [StoresController, 'destroy']).as('stores.destroy')
-      })
-      .use(middleware.auth())
+    router.post('/', [StoresController, 'store']).as('stores.store')
+    router.put('/:id', [StoresController, 'update']).as('stores.update')
+    router.delete('/:id', [StoresController, 'destroy']).as('stores.destroy')
   })
+  .use(middleware.auth())
   .prefix('/stores')
 
 router
   .group(() => {
     router.get('/:id', [CategoriesController, 'show']).as('categories.show')
     router.get('/:id/items', [ItemsController, 'index']).as('items.index')
-    router
-      .group(() => {
-        router.post('/:storeId', [CategoriesController, 'store']).as('categories.store')
-        router.put('/:id', [CategoriesController, 'update']).as('categories.update')
-        router.delete('/:id', [CategoriesController, 'destroy']).as('categories.destroy')
-      })
-      .use(middleware.auth())
+    router.post('/:storeId', [CategoriesController, 'store']).as('categories.store')
+    router.put('/:id', [CategoriesController, 'update']).as('categories.update')
+    router.delete('/:id', [CategoriesController, 'destroy']).as('categories.destroy')
   })
+  .use(middleware.auth())
   .prefix('/categories')
 
 router
   .group(() => {
     router.get('/:id', [ItemsController, 'show']).as('items.show')
-    router
-      .group(() => {
-        router.post('/:categoryId', [ItemsController, 'store']).as('items.store')
-        router.put('/:id', [ItemsController, 'update']).as('items.update')
-        router.delete('/:id', [ItemsController, 'destroy']).as('items.destroy')
-      })
-      .use(middleware.auth())
+    router.post('/:categoryId', [ItemsController, 'store']).as('items.store')
+    router.put('/:id', [ItemsController, 'update']).as('items.update')
+    router.delete('/:id', [ItemsController, 'destroy']).as('items.destroy')
   })
+  .use(middleware.auth())
   .prefix('/items')
 
 router
   .group(() => {
     router.get('/:id', [AddonsController, 'show']).as('addons.show')
-    router
-      .group(() => {
-        router.post('/:storeId', [AddonsController, 'store']).as('addons.store')
-        router.put('/:id', [AddonsController, 'update']).as('addons.update')
-        router.delete('/:id', [AddonsController, 'destroy']).as('addons.destroy')
-      })
-      .use(middleware.auth())
+    router.post('/:storeId', [AddonsController, 'store']).as('addons.store')
+    router.put('/:id', [AddonsController, 'update']).as('addons.update')
+    router.delete('/:id', [AddonsController, 'destroy']).as('addons.destroy')
   })
+  .use(middleware.auth())
   .prefix('/addons')
