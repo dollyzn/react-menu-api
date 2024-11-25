@@ -1,11 +1,13 @@
 import Item from '#models/item'
 import { uuidValidator } from '#validators/common'
-import { storeValidator, updateValidator } from '#validators/item'
+import { categoryExistValidator, storeValidator, updateValidator } from '#validators/item'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class ItemsController {
-  async index({}: HttpContext) {
-    return Item.query()
+  async index({ params }: HttpContext) {
+    const categoryId = await categoryExistValidator.validate(params.id)
+
+    return Item.query().where('categoryId', categoryId)
   }
 
   async show({ params }: HttpContext) {
@@ -14,10 +16,12 @@ export default class ItemsController {
     return Item.query().where('id', id).preload('addons').preload('category').firstOrFail()
   }
 
-  async store({ request }: HttpContext) {
+  async store({ request, params }: HttpContext) {
+    const categoryId = await categoryExistValidator.validate(params.categoryId)
+
     const data = await request.validateUsing(storeValidator)
 
-    return Item.create(data)
+    return Item.create({ categoryId, ...data })
   }
 
   async update({ params, request }: HttpContext) {

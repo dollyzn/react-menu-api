@@ -18,7 +18,7 @@ const slug = vine
   })
 const isDefault = vine.boolean().optional()
 
-export const storeValidator = vine.compile(
+const storeValidator = vine.compile(
   vine.object({
     name,
     status,
@@ -32,7 +32,7 @@ export const storeValidator = vine.compile(
   })
 )
 
-export const updateValidator = vine.compile(
+const updateValidator = vine.compile(
   vine.object({
     name: name.optional(),
     status,
@@ -45,3 +45,5 @@ export const updateValidator = vine.compile(
     isDefault,
   })
 )
+
+export { storeValidator, updateValidator }

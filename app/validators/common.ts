@@ -1,5 +1,17 @@
-import vine from '@vinejs/vine'
+import vine, { SimpleMessagesProvider } from '@vinejs/vine'
 
-export const uuidValidator = vine.compile(vine.string().uuid())
+const uuidValidator = vine.compile(vine.string().uuid())
 
-export const numberValidator = vine.compile(vine.number())
+const numberValidator = vine.compile(vine.number())
+
+const storeExistValidator = vine.compile(
+  vine.number().exists(async (db, value) => {
+    return await db.from('stores').select('id').where('id', value).first()
+  })
+)
+
+storeExistValidator.messagesProvider = new SimpleMessagesProvider({
+  'database.exists': 'Loja não encontrada',
+})
+
+export { uuidValidator, numberValidator, storeExistValidator }

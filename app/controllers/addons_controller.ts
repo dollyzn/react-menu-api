@@ -1,11 +1,13 @@
 import Addon from '#models/addon'
 import { storeValidator, updateValidator } from '#validators/addon'
-import { uuidValidator } from '#validators/common'
+import { storeExistValidator, uuidValidator } from '#validators/common'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class AddonsController {
-  async index({}: HttpContext) {
-    return Addon.query()
+  async index({ params }: HttpContext) {
+    const storeId = await storeExistValidator.validate(params.id)
+
+    return Addon.query().where('storeId', storeId)
   }
 
   async show({ params }: HttpContext) {
@@ -14,10 +16,12 @@ export default class AddonsController {
     return Addon.findOrFail(id)
   }
 
-  async store({ request }: HttpContext) {
+  async store({ params, request }: HttpContext) {
+    const storeId = await storeExistValidator.validate(params.storeId)
+
     const data = await request.validateUsing(storeValidator)
 
-    return Addon.create(data)
+    return Addon.create({ storeId, ...data })
   }
 
   async update({ params, request }: HttpContext) {

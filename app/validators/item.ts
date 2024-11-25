@@ -1,13 +1,25 @@
-import vine from '@vinejs/vine'
+import vine, { SimpleMessagesProvider } from '@vinejs/vine'
 
 const name = vine.string().trim()
 const description = vine.string().optional()
 const price = vine.number().positive()
 const photoUrl = vine.string().optional()
 
-export const storeValidator = vine.compile(
+const categoryExistValidator = vine.compile(
+  vine
+    .string()
+    .uuid()
+    .exists(async (db, value) => {
+      return await db.from('categories').select('id').where('id', value).first()
+    })
+)
+
+categoryExistValidator.messagesProvider = new SimpleMessagesProvider({
+  'database.exists': 'Categoria não encontrada',
+})
+
+const storeValidator = vine.compile(
   vine.object({
-    categoryId: vine.string().uuid(),
     name,
     description,
     price,
@@ -15,7 +27,7 @@ export const storeValidator = vine.compile(
   })
 )
 
-export const updateValidator = vine.compile(
+const updateValidator = vine.compile(
   vine.object({
     name: name.optional(),
     description,
@@ -23,3 +35,5 @@ export const updateValidator = vine.compile(
     photoUrl,
   })
 )
+
+export { categoryExistValidator, storeValidator, updateValidator }

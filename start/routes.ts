@@ -38,6 +38,8 @@ router
   .group(() => {
     router.get('/', [StoresController, 'index']).as('stores.index')
     router.get('/:id', [StoresController, 'show']).as('stores.show')
+    router.get('/:id/categories', [CategoriesController, 'index']).as('categories.index')
+    router.get('/:id/addons', [AddonsController, 'index']).as('addons.index')
     router
       .group(() => {
         router.post('/', [StoresController, 'store']).as('stores.store')
@@ -50,11 +52,11 @@ router
 
 router
   .group(() => {
-    router.get('/', [CategoriesController, 'index']).as('categories.index')
     router.get('/:id', [CategoriesController, 'show']).as('categories.show')
+    router.get('/:id/items', [ItemsController, 'index']).as('items.index')
     router
       .group(() => {
-        router.post('/', [CategoriesController, 'store']).as('categories.store')
+        router.post('/:storeId', [CategoriesController, 'store']).as('categories.store')
         router.put('/:id', [CategoriesController, 'update']).as('categories.update')
         router.delete('/:id', [CategoriesController, 'destroy']).as('categories.destroy')
       })
@@ -64,11 +66,10 @@ router
 
 router
   .group(() => {
-    router.get('/', [ItemsController, 'index']).as('items.index')
     router.get('/:id', [ItemsController, 'show']).as('items.show')
     router
       .group(() => {
-        router.post('/', [ItemsController, 'store']).as('items.store')
+        router.post('/:categoryId', [ItemsController, 'store']).as('items.store')
         router.put('/:id', [ItemsController, 'update']).as('items.update')
         router.delete('/:id', [ItemsController, 'destroy']).as('items.destroy')
       })
@@ -78,11 +79,10 @@ router
 
 router
   .group(() => {
-    router.get('/', [AddonsController, 'index']).as('addons.index')
     router.get('/:id', [AddonsController, 'show']).as('addons.show')
     router
       .group(() => {
-        router.post('/', [AddonsController, 'store']).as('addons.store')
+        router.post('/:storeId', [AddonsController, 'store']).as('addons.store')
         router.put('/:id', [AddonsController, 'update']).as('addons.update')
         router.delete('/:id', [AddonsController, 'destroy']).as('addons.destroy')
       })
