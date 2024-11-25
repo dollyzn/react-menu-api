@@ -1,6 +1,9 @@
 import { DateTime } from 'luxon'
-import { BaseModel, beforeSave, column } from '@adonisjs/lucid/orm'
+import { BaseModel, beforeSave, column, hasMany } from '@adonisjs/lucid/orm'
+import type { HasMany } from '@adonisjs/lucid/types/relations'
 import StoreStatus from '../enums/store-status.js'
+import Category from './category.js'
+import Addon from './addon.js'
 
 export default class Store extends BaseModel {
   @column({ isPrimary: true })
@@ -38,6 +41,12 @@ export default class Store extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
+
+  @hasMany(() => Category)
+  declare categories: HasMany<typeof Category>
+
+  @hasMany(() => Addon)
+  declare addons: HasMany<typeof Addon>
 
   @beforeSave()
   public static async ensureSingleDefault(store: Store) {

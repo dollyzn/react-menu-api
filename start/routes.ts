@@ -14,6 +14,7 @@ import CategoriesController from '#controllers/categories_controller'
 import ItemsController from '#controllers/items_controller'
 import AddonsController from '#controllers/addons_controller'
 import StoresController from '#controllers/stores_controller'
+import MenuController from '#controllers/menu_controller'
 
 router.get('/', async () => {
   return {
@@ -77,3 +78,9 @@ router
   })
   .use(middleware.auth())
   .prefix('/addons')
+
+router
+  .group(() => {
+    router.get('/:slug?', [MenuController, 'show']).as('menu.show')
+  })
+  .prefix('/menu')
