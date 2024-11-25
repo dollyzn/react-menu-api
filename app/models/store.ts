@@ -1,9 +1,10 @@
 import { DateTime } from 'luxon'
-import { BaseModel, beforeSave, column, hasMany } from '@adonisjs/lucid/orm'
+import { BaseModel, beforeSave, beforeUpdate, column, hasMany } from '@adonisjs/lucid/orm'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
 import StoreStatus from '../enums/store-status.js'
 import Category from './category.js'
 import Addon from './addon.js'
+import { getSocket } from '#start/ws'
 
 export default class Store extends BaseModel {
   @column({ isPrimary: true })
@@ -54,6 +55,18 @@ export default class Store extends BaseModel {
       await Store.query()
         .whereNot('id', store.id || 0)
         .update({ isDefault: false })
+    }
+  }
+
+  @beforeUpdate()
+  public static async notifyStatusUpdate(store: Store) {
+    if (store.$dirty.status) {
+      const io = getSocket()
+
+      io.to(`store-${store.id}`).emit('store-status', {
+        storeId: store.id,
+        status: store.status,
+      })
     }
   }
 }
